@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	tapPath         = "/dev/tap%d"
-	namePrefix      = "mvp"
+	tapPath         = "/dev/tap"
+	suffix          = "Mvp"
 	defaultCapacity = 100
 )
 
@@ -32,7 +32,7 @@ func (mdp *MacvtapDevicePlugin) generateMacvtapDevices() []*pluginapi.Device {
 	}
 
 	for i := 0; i < capacity; i++ {
-		name := fmt.Sprintf("%s%s.%d", namePrefix, mdp.Name, i)
+		name := fmt.Sprint(mdp.Name, suffix, i)
 		macvtapDevs = append(macvtapDevs, &pluginapi.Device{
 			ID:     name,
 			Health: pluginapi.Healthy,
@@ -140,7 +140,7 @@ func (mdp *MacvtapDevicePlugin) Allocate(ctx context.Context, r *pluginapi.Alloc
 			if err != nil {
 				return nil, err
 			}
-			devPath := fmt.Sprintf(tapPath, index)
+			devPath := fmt.Sprint(tapPath, index)
 			dev.HostPath = devPath
 			dev.ContainerPath = devPath
 			dev.Permissions = "rw"
