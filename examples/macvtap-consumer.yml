@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: macvtap-consumer
+spec:
+  containers:
+  - name: tcpdump
+    image: corfr/tcpdump
+    command: ["/bin/sleep", "1234"]
+    resources:
+      limits:
+        macvtap.network.kubevirt.io/eth0: 1
+      requests:
+        macvtap.network.kubevirt.io/eth0: 1

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: macvtap-device-plugin
+spec:
+  selector:
+    matchLabels:
+      name: macvtap-device-plugin
+  template:
+    metadata:
+      labels:
+        name: macvtap-device-plugin
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: macvtap-device-plugin
+        image: registry:5000/kubevirt/device-plugin-network-macvtap:latest
+        securityContext:
+          privileged: true
+        envFrom:
+        - configMapRef:
+            name: macvtapdp-config
+        volumeMounts:
+          - name: device-plugin
+            mountPath: /var/lib/kubelet/device-plugins
+      volumes:
+        - name: device-plugin
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
